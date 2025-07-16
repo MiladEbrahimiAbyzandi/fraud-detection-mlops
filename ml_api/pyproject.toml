@@ -1,7 +1,25 @@
 [project]
 name = "ml-api"
 version = "0.1.0"
-description = "Fraud Detection Project - Card Transaction"
+description = "Fraud Detection ML API"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "fastapi>=0.116.1",
+    "uvicorn>=0.35.0",
+]
+
+[dependency-groups]
+dev = [
+    "python-dotenv>=1.1.1",
+    "ruff>=0.12.3",
+]
+
+[tool.ruff]
+line-length = 120
+src = ["src", "scripts"]
+fix = true
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "PIE"]
+ignore = ["E501"]  # let formatter handle long lines on commit

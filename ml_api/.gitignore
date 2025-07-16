@@ -1,1 +1,14 @@
 .venv/
+.ipynb_checkpoints/
+.DS_Store
+.env
+.venv/
+.vscode/
+experiments/
+__pycache__/
+build/
+.idea/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.ruff_cache/
