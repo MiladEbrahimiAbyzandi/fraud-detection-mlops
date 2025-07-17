@@ -7,6 +7,10 @@ requires-python = ">=3.13"
 dependencies = [
     "fastapi>=0.116.1",
     "uvicorn>=0.35.0",
+    "google-cloud-storage>=2.10.0",
+    "google-auth>=2.23.0",
+    "pandas>=2.0.0",
+    "pydantic>=2.0.0",
 ]
 
 [dependency-groups]

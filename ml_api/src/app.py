@@ -3,6 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Fraud Detection ML API", description="Fraud Detection ML API", version="1.0.0")
 
+# Include routers
+# app.include_router(data_router)
+
 
 # Add middlewares
 app.add_middleware(
