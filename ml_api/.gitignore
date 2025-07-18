@@ -12,4 +12,4 @@ build/
 .pytest_cache/
 .ruff_cache/
 .ruff_cache/
-src/data_loader/data/
+src/data_loader/data/8/
