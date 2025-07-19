@@ -38,7 +38,8 @@ COLUMNS_TO_RENAME = {
     "Years Since Retirement": "Years_Since_Retirement",
     "Retirement Phase": "Retirement_Phase",
     "Zip Income Tier": "Zip_Income_Tier",
-    "CARD INDEX": "Card_Index",
+    "CARD INDEX": "Card",
     "Card Number": "Card_Number",
     "Is Fraud?": "Is_Fraud",
+    "Person" : "User",
 }
