@@ -92,3 +92,6 @@ class RawData(BaseModel):
     cards: list[Card]
     users: list[User]
     transactions: list[Transaction]
+
+class MergedUserCardTransaction(Card,User,Transaction):
+    pass

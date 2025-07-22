@@ -23,6 +23,7 @@ def load_data() -> RawData:
     return RawData(cards=cards, users=users, transactions=transactions)
 
 
+
 if __name__ == "__main__":
     data = load_data()
     print(data)
