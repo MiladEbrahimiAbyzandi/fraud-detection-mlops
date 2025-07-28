@@ -5,7 +5,7 @@ from pydantic import BaseModel, field_validator, FieldValidationInfo
 
 class Card(BaseModel):
     User: int
-    Card_Index: int
+    Card: int
     Card_Brand: str
     Card_Type: str
     Card_Number: int
@@ -26,7 +26,7 @@ class Card(BaseModel):
 
 
 class User(BaseModel):
-    Person: str
+    User: str
     Current_Age: int
     Retirement_Age: int
     Birth_Year: int
@@ -60,6 +60,8 @@ class User(BaseModel):
         if v is np.nan:
             return None
         return v
+    
+
 
 
 class Transaction(BaseModel):
@@ -90,3 +92,6 @@ class RawData(BaseModel):
     cards: list[Card]
     users: list[User]
     transactions: list[Transaction]
+
+class MergedUserCardTransaction(Card,User,Transaction):
+    pass
