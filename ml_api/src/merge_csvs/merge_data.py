@@ -32,5 +32,7 @@ def merge_csvs(cards: list[Card], users: list[User], transactions: list[Transact
 
 
 if __name__ == "__main__":
-    df=merge_csvs()
+    from data_loader.load_data import load_data
+    data = load_data()
+    df=merge_csvs(data.cards, data.users, data.transactions)
     print(df)

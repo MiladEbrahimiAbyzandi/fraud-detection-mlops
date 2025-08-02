@@ -1,9 +1,10 @@
 from pydantic import BaseModel, field_validator
+from data_loader.models import MergedUserCardTransaction
 from typing import Literal
 from datetime import datetime
 import pandas as pd
 
-class TransactionFeatures(BaseModel):
+class TransactionFeatures(MergedUserCardTransaction):
     timestamp : datetime
     transaction_hour: int | None
     Date: datetime
