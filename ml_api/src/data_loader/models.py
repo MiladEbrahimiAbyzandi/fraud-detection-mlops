@@ -1,6 +1,7 @@
 from pydantic import BaseModel, field_validator
 import numpy as np
 import pandas as pd
+from typing import Optional
 from datetime import datetime
 from pydantic import BaseModel, field_validator,model_validator, FieldValidationInfo
 
@@ -115,9 +116,15 @@ class Transaction(BaseModel):
     Merchant_City: str | None
     Merchant_State: str | None
     Zip: str
-    MCC: int
+    MCC: str
     Errors: str | None = None
-    Is_Fraud: int | str
+    Is_Fraud: Optional[int | str] = None
+
+    @field_validator("MCC", mode='before')
+    def validate_mcc(cls, v):
+        if pd.isna(v) or v == '':   
+            return "Unknown"
+        return str(v)
 
     @field_validator("*", mode="before")
     def validate_all(cls, v):

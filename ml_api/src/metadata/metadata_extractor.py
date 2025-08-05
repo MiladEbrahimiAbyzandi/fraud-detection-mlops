@@ -4,9 +4,9 @@ def metadata(X_train: pd.DataFrame, y_train: pd.Series) -> dict:
     """
     Extract EDA level metadata.
     """
-    
+
     try:
-        
+        df= pd.concat([X_train, y_train], axis=1)
         cp_transactions = df[df["transaction_type"] == "CP"]
         state_fraud_rate = cp_transactions.groupby("Merchant_State")[
             "Is_Fraud"
