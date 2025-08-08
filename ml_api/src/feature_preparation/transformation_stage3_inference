@@ -115,7 +115,7 @@ def transformation_stage3_inference(
     missing_cols_2 = set(selected_columns) - set(df.columns)
     if missing_cols_2:
         raise ValueError(
-            f"Your input DataFrame is missing required columns: {missing_cols}. "
+            f"Your input DataFrame is missing required columns: {missing_cols_1}. "
             "Please ensure all required features are present before inference."
             )
     # Variance threshold
