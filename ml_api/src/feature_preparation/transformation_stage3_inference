@@ -1,0 +1,128 @@
+import pandas as pd
+from sklearn.preprocessing import OneHotEncoder, RobustScaler
+import logging
+logging.basicConfig(level=logging.INFO)
+def transformation_stage3_inference(
+    df: pd.DataFrame | pd.Series,
+    encoder: OneHotEncoder,
+    scaler: RobustScaler ,
+    selected_columns: list[str] ) -> pd.DataFrame | pd.Series:
+   
+    """
+    Perform third stage of data transformation including encoding, scaling, and feature selection.
+    For inference purposes only.
+    """
+    # unnecessary columns
+    drop_cols = [
+        "Year",
+        "Month",
+        "Day",
+        "Time",
+        "Merchant_Name",
+        "Merchant_City",
+        "Merchant_State",
+        "Zip",
+        "Is_Fraud",
+        "Current_Age",
+        "Retirement_Age",
+        "Birth_Year",
+        "Birth_Month",
+        "Gender",
+        "Address",
+        "Apartment",
+        "City",
+        "State",
+        "Zipcode",
+        "Latitude",
+        "Longitude",
+        "Per_Capita_Income_Zipcode",
+        "Yearly_Income_Person",
+        "Card_Number",
+        "Expires",
+        "CVV",
+        "Acct_Open_Date",
+        "Year_PIN_last_Changed",
+        "Card_on_Dark_Web",
+        "timestamp",
+        "Date",
+        "Acct_Open_Year",
+        "low_FICO_high_spend",
+        "low_FICO_high_DTI",
+        "next_mcc",
+        "time_diff",
+        "is_us_zip",
+        "min_acc_open_date",
+        "max_acc_open_date",
+    ]
+    # categorical columns
+    categorical_cols = [
+        "Use_Chip",
+        "Errors",
+        "Card_Brand",
+        "Card_Type",
+        "Has_Chip",
+        "day_of_week",
+        "transaction_type",
+        "age_group",
+        "retirement_proximity",
+        "retirement_phase",
+        "zip_income_tier",
+        "income_tier",
+        "income_mismatch",
+        "credit_util_bin",
+        "fico_tier",
+    ]
+
+    #numeric columns
+    numeric_cols = [
+        "Amount",
+        "MCC",
+        "Total_Debt",
+        "FICO_Score",
+        "Num_Credit_Cards",
+        "Cards_Issued",
+        "Credit_Limit",
+        "transaction_hour",
+        "years_to_retirement",
+        "years_since_retirement",
+        "amount_income_ratio",
+        "income_relative_to_zip",
+        "debt_to_income",
+        "credit_utilization",
+        "account_tenure_years",
+        "unique_mcc_count",
+        "months_to_expiry",
+    ]
+
+    df = df.drop(columns=drop_cols, errors="ignore")
+    encoded = encoder.transform(df[categorical_cols])
+    encoded_df = pd.DataFrame(
+        encoded,
+        columns=encoder.get_feature_names_out(categorical_cols),
+        index=df.index,
+    )
+    df = df.drop(columns=categorical_cols)
+    df = pd.concat([df, encoded_df], axis=1)
+    # Scaling  
+    missing_cols_1 = set(numeric_cols)-set(df.columns)
+    if missing_cols_1:
+        raise ValueError(f"Wrong features in input DataFrame: {missing_cols_1}")
+    df[numeric_cols] = scaler.transform(
+        df[numeric_cols].fillna(
+            df[numeric_cols].mean()
+        )
+    )
+    missing_cols_2 = set(selected_columns) - set(df.columns)
+    if missing_cols_2:
+        raise ValueError(
+            f"Your input DataFrame is missing required columns: {missing_cols}. "
+            "Please ensure all required features are present before inference."
+            )
+    # Variance threshold
+    df = df[selected_columns]
+
+    return df
+
+if __name__ == "__main__":
+    logging.info("You are using transformation_stage3_inference function for inference")
+
