@@ -4,7 +4,7 @@ from typing import Tuple
 from sklearn.preprocessing import OneHotEncoder, RobustScaler
 from sklearn.feature_selection import VarianceThreshold
 logging.basicConfig(level=logging.INFO)
-def transforamtion_stage3_training(X_train:pd.DataFrame,
+def transformation_stage3_training(X_train:pd.DataFrame,
                           X_test: pd.DataFrame
                           ) -> Tuple[pd.DataFrame, pd.DataFrame, OneHotEncoder, RobustScaler, list[str]]:
     """
