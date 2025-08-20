@@ -10,7 +10,7 @@ from feature_preparation.transformation_stage3_training import transformation_st
 from imbalance_correction.imbalance_correction import handle_imbalance
 from training.training import train
 from evaluate.evaluate import evaluate
-from utils.io import save_joblib
+from utils.io import save_joblib, save_json
 from pathlib import Path
 
 
@@ -23,7 +23,7 @@ df = merge_csvs(data.cards, data.users, data.transactions)
 df = transform_stage1(df)
 X_train, X_test, y_train, y_test = split_data(df)
 meta = metadata(X_train, y_train)
-save_joblib(meta, path / "metadata.pkl")
+save_json(meta, path / "metadata.json")
 X_train = transform_stage2(meta, X_train)
 X_test = transform_stage2(meta, X_test)
 # Transform stage 3
