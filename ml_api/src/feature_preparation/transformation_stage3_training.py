@@ -56,6 +56,7 @@ def transformation_stage3_training(X_train:pd.DataFrame,
     # categorical columns
     categorical_cols = [
         "Use_Chip",
+        "MCC",
         "Errors",
         "Card_Brand",
         "Card_Type",
@@ -75,7 +76,6 @@ def transformation_stage3_training(X_train:pd.DataFrame,
     #numeric columns
     numeric_cols = [
         "Amount",
-        "MCC",
         "Total_Debt",
         "FICO_Score",
         "Num_Credit_Cards",
@@ -159,7 +159,7 @@ if __name__ == "__main__":
     X_test = transform_stage2(meta, X_test)
     
     # Transform stage 3
-    X_train_transformed, X_test_transformed, encoder, scaler, selected_columns = transforamtion_stage3_training(
+    X_train_transformed, X_test_transformed, encoder, scaler, selected_columns = transformation_stage3_training(
         X_train=X_train, X_test=X_test
     )
     logging.info("Transformation Stage 3 completed successfully.")

@@ -182,14 +182,14 @@ class Transaction(BaseModel):
     @model_validator(mode='before')
     def set_state_if_city_online (cls,data):
         city=data.get("Merchant_City")
-        if city.lower() =='online':
+        if city and city.lower() =='online':
             data["Merchant_State"]= 'online'
         return data
     
     @model_validator(mode='before')
-    def set_xip_if_city_online (cls,data):
+    def set_Zip_if_city_online (cls,data):
         city=data.get("Merchant_City")
-        if city.lower() =='online':
+        if city and city.lower() =='online':
             data["Zip"]= 'online'
         return data
 

@@ -57,6 +57,7 @@ def transformation_stage3_inference(
     # categorical columns
     categorical_cols = [
         "Use_Chip",
+        "MCC",
         "Errors",
         "Card_Brand",
         "Card_Type",
@@ -76,7 +77,6 @@ def transformation_stage3_inference(
     #numeric columns
     numeric_cols = [
         "Amount",
-        "MCC",
         "Total_Debt",
         "FICO_Score",
         "Num_Credit_Cards",
