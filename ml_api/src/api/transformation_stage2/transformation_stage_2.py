@@ -63,6 +63,4 @@ if __name__ == "__main__":
     meta = metadata(X_train, y_train)
     X_train = transform_stage2(meta, X_train)
     X_test = transform_stage2(meta, X_test)
-    
     print("Stage 2 transformation completed successfully.")
-    print(X_train.shape, X_test.shape)
