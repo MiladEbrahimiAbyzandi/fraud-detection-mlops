@@ -14,6 +14,6 @@ build/
 .ruff_cache/
 src/data_loader/data/8/
 data/*
-
+raw_data
 app/__pycache__/
 app/inference/inference_data.csv

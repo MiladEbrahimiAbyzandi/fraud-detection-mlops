@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from typing import Optional
 from datetime import datetime
-from pydantic import BaseModel, field_validator,model_validator, FieldValidationInfo
+from pydantic import BaseModel, field_validator,model_validator
 
 
 class Card(BaseModel):
