@@ -1,6 +1,6 @@
 from pathlib import Path
 
-DATA_PATH = Path(__file__).parent / "data"
+DATA_PATH = Path(__file__).parent.parent.parent / "raw_data"/"data"
 
 CARDS_CSV_PATH = DATA_PATH / "8" / "sd254_cards.csv"
 USERS_CSV_PATH = DATA_PATH / "8" / "sd254_users.csv"

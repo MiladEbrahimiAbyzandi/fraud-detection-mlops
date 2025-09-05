@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 import pandas as pd
 from pathlib import Path
-from data_loader.models import Card, User, Transaction, RawData
-from data_loader.constants import CARDS_CSV_PATH, USERS_CSV_PATH, TRANSACTIONS_CSV_PATH, COLUMNS_TO_RENAME
+from api._1_data_loader.models import Card, User, Transaction, RawData
+from  api._1_data_loader.constants import CARDS_CSV_PATH, USERS_CSV_PATH, TRANSACTIONS_CSV_PATH, COLUMNS_TO_RENAME
 
 
 def csv_to_pydantic_model(csv_path: str, model: BaseModel) -> list[BaseModel]:

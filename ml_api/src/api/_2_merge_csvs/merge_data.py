@@ -1,5 +1,5 @@
 import pandas as pd
-from data_loader.models import Card, User, Transaction, MergedUserCardTransaction
+from  api._1_data_loader.models import Card, User, Transaction, MergedUserCardTransaction
 
 
 
@@ -32,7 +32,7 @@ def merge_csvs(cards: list[Card], users: list[User], transactions: list[Transact
 
 
 if __name__ == "__main__":
-    from data_loader.load_data import load_data
+    from api._1_data_loader.load_data import load_data
     data = load_data()
     df=merge_csvs(data.cards, data.users, data.transactions)
     print(df)

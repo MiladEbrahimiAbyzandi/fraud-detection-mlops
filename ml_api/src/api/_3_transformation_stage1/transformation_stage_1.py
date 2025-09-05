@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from transformation_stage1.model import TransactionFeatures
+from api._3_transformation_stage1.model import TransactionFeatures
 
 
 def transform_stage1(df: pd.DataFrame) -> pd.DataFrame:
@@ -187,8 +187,8 @@ def transform_stage1(df: pd.DataFrame) -> pd.DataFrame:
 
 if __name__ == "__main__":
     # Example usage
-    from data_loader.load_data import load_data
-    from merge_csvs.merge_data import merge_csvs
+    from api._1_data_loader.load_data import load_data
+    from api._2_merge_csvs.merge_data import merge_csvs
     data= load_data()
     df= merge_csvs(data.cards, data.users, data.transactions)
     df=transform_stage1(df)

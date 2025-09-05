@@ -65,10 +65,10 @@ def metadata(X_train: pd.DataFrame, y_train: pd.Series) -> dict:
 
 if __name__ == "__main__":
     # Example usage
-    from data_loader.load_data import load_data
-    from merge_csvs.merge_data import merge_csvs
-    from transformation_stage1.transformation_stage_1 import transform_stage1
-    from splitter.data_splitter import split_data
+    from api._1_data_loader.load_data import load_data
+    from api._2_merge_csvs.merge_data import merge_csvs
+    from api._3_transformation_stage1.transformation_stage_1 import transform_stage1
+    from api._4_splitter.data_splitter import split_data
 
     
     data = load_data()

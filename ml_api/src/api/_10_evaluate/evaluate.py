@@ -38,15 +38,15 @@ def evaluate(model: BaseEstimator, X_test: pd.DataFrame, y_test: pd.Series) -> d
     
 if __name__ == "__main__":
     # Example usage
-    from data_loader.load_data import load_data
-    from merge_csvs.merge_data import merge_csvs
-    from transformation_stage1.transformation_stage_1 import transform_stage1
-    from splitter.data_splitter import split_data
-    from metadata.metadata_extractor import metadata
-    from transformation_stage2.transformation_stage_2 import transform_stage2
-    from feature_preparation.transformation_stage3_training import transformation_stage3_training
-    from imbalance_correction.imbalance_correction import handle_imbalance
-    from training.training import train
+    from api._1_data_loader.load_data import load_data
+    from api._2_merge_csvs.merge_data import merge_csvs
+    from api._3_transformation_stage1.transformation_stage_1 import transform_stage1
+    from api._4_splitter.data_splitter import split_data
+    from api._5_metadata.metadata_extractor import metadata
+    from api._6_transformation_stage2.transformation_stage_2 import transform_stage2
+    from api._7_transformation_stage3.transformation_stage3_training import transformation_stage3_training
+    from api._8_imbalance_correction.imbalance_correction import handle_imbalance
+    from api._9_training.training import train
 
     data = load_data()
     df = merge_csvs(data.cards, data.users, data.transactions)

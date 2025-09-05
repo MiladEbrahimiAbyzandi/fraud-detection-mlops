@@ -1,21 +1,24 @@
 import pandas as pd
 import logging
-from data_loader.load_data import load_data
-from merge_csvs.merge_data import merge_csvs
-from transformation_stage1.transformation_stage_1 import transform_stage1
-from splitter.data_splitter import split_data
-from metadata.metadata_extractor import metadata
-from transformation_stage2.transformation_stage_2 import transform_stage2
-from feature_preparation.transformation_stage3_training import transformation_stage3_training
-from imbalance_correction.imbalance_correction import handle_imbalance
-from training.training import train
-from evaluate.evaluate import evaluate
-from utils.io import save_joblib, save_json
+from src.api._1_data_loader.load_data import load_data
+from src.api._2_merge_csvs.merge_data import merge_csvs
+from src.api._3_transformation_stage1.transformation_stage_1 import transform_stage1
+from src.api._4_splitter.data_splitter import split_data
+from src.api._5_metadata.metadata_extractor import metadata
+from src.api._6_transformation_stage2.transformation_stage_2 import transform_stage2
+from src.api._7_transformation_stage3.transformation_stage3_training import transformation_stage3_training
+from src.api._8_imbalance_correction.imbalance_correction import handle_imbalance
+from src.api._9_training.training import train
+from src.api._10_evaluate.evaluate import evaluate
+from src.api.utils.io import save_joblib, save_json
 from pathlib import Path
+from datetime import datetime
 
 
 logging.basicConfig(level=logging.INFO)
-path= Path(__file__).parent.parent / "data" / "processed"
+base_path= Path(__file__).parent.parent / "data" / "processed"
+stamped_folder=datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+path= base_path / stamped_folder
 path.mkdir(parents=True, exist_ok=True)
 
 data= load_data()

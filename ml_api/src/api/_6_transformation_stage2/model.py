@@ -1,4 +1,4 @@
-from transformation_stage1.model import TransactionFeatures
+from api._3_transformation_stage1.model import TransactionFeatures
 import pandas as pd
 from typing import Literal
 from pydantic import ConfigDict
