@@ -9,24 +9,27 @@ from api.router_constants import X_TRAIN_PATH, Y_TRAIN_PATH, METADATA_PATH
 router=APIRouter()
 
 class ArtifactsRequest(BaseModel):
-    x_train_path: Path = X_TRAIN_PATH
-    y_train_path: Path = Y_TRAIN_PATH
+    x_train_path: str = str(X_TRAIN_PATH)
+    y_train_path: str = str(Y_TRAIN_PATH)
 
     @field_validator("x_train_path","y_train_path", mode="before")
-    def check_files_exist(cls, v=Path):
+    def check_files_exist(cls, v=str):
+        v=Path(v)
         if not(v.suffix.lower()==".csv" and v.is_file()):
             raise ValueError("The CSV file is not found")
-        return v
+        return str(v)
     
 class ArtifactsResponse(BaseModel):
-    metadata: Path =METADATA_PATH
+    metadata: str = str(METADATA_PATH)
+    message: str
     @field_validator("metadata", mode="after")
-    def check_json(cls, v: Path):
+    def check_json(cls, v: str):
+        v=Path(v)
         if not (v.suffix.lower() == ".json" and v.is_file()) :
             raise ValueError("The output file must be a JSON which is not found")
-        return v
+        return str(v)
 
-@router.get("/artifacts")
+@router.post("/artifacts")
 async def get_artifacts(Request: ArtifactsRequest):
     """
     Get data artifacts in order to apply to the next levels of data transformation on the X_train dataset.
@@ -40,9 +43,9 @@ async def get_artifacts(Request: ArtifactsRequest):
         with open(METADATA_PATH, "w") as f:
             json.dump(data_metadata, f)
 
-        return {
-            "metadata": data_metadata
-        }
+        return ArtifactsResponse(metadata=str(METADATA_PATH),
+                              message=f"Metadata exctracted and saved to :{METADATA_PATH}")
+        
     except Exception as e:
         return HTTPException(
             status_code=500,

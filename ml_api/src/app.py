@@ -3,6 +3,7 @@ from api._1_data_loader.health import router as health_router
 from api._2_merge_csvs.merge_csv_router import router as merge_csv_router
 from api._3_transformation_stage1.transformation_stage_1_router import router as transformation_stage1_router
 from api._4_splitter.splitter_router import router as splitter_router
+from api._5_metadata.artifacts_router import router as artifacts_router
 from api._6_transformation_stage2.transformation_stage_2_router import router as transformation_stage2_router
 from api._7_transformation_stage3.transformation_stage_3_training_router import router as transformation_stage3_training_router
 from api._7_transformation_stage3.transformation_stage_3_inference_router import router as transformation_stage_3_inference_router
@@ -21,6 +22,7 @@ app.include_router(health_router, prefix="/api/v1", tags=["Health"])
 app.include_router(merge_csv_router,prefix="/api/v1", tags=["Data"])
 app.include_router(transformation_stage1_router,prefix="/api/v1", tags=["Transformation"])
 app.include_router(splitter_router,prefix="/api/v1", tags=["splitter"])
+app.include_router(artifacts_router,prefix="/api/v1", tags=["Metadata"])
 app.include_router(transformation_stage2_router,prefix="/api/v1", tags=["Transformation"])
 app.include_router(transformation_stage3_training_router,prefix="/api/v1", tags=["Transformation"])
 app.include_router(transformation_stage_3_inference_router,prefix="/api/v1", tags=["Transformation"])
