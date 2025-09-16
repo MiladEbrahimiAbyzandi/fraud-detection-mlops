@@ -26,7 +26,7 @@ def transform_stage2( metadata: dict, data:pd.DataFrame | pd.Series ) -> pd.Data
         data["unique_mcc_count"] = data.groupby("User")["MCC"].transform(
             "nunique"
         )
-        data["next_mcc"] = data.groupby("User")["MCC"].shift(-1)
+        data["next_mcc"] = data.groupby("User")["MCC"].shift(-1).astype(str)
         data["mcc_changed"] = (data["MCC"] != data["next_mcc"]).astype(
             int
         )

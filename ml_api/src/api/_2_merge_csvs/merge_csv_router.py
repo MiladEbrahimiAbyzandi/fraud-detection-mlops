@@ -1,5 +1,5 @@
 from fastapi import APIRouter,HTTPException
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator,Field
 from pathlib import Path
 from  api._1_data_loader.load_data import load_data
 from  api._2_merge_csvs.merge_data import merge_csvs
@@ -8,27 +8,29 @@ router=APIRouter()
 
 #----request and response models----
 class MergeCSVRequest(BaseModel):
-    cards_path:  Path = CARDS_PATH
-    users_path: Path =  USERS_PATH
-    transaction_path: Path = TRANSACTIONS_PATH
+    cards_path: str = Field(default=str(CARDS_PATH))
+    users_path: str = Field(default=str(USERS_PATH))
+    transaction_path: str = Field(default=str(TRANSACTIONS_PATH))
     @field_validator("cards_path", "users_path", "transaction_path", mode="before")
-    def check_csv(cls, v: Path):
-        if not (v.suffix.lower() == ".csv" and v.is_file()):
+    def check_csv(cls, v: str):
+        path=Path(v)
+        if not (path.suffix.lower() == ".csv" and path.is_file()):
             raise ValueError("The file must be a CSV which already exists. please leave the paths empty to use the default paths.")
-        return v
+        return str(path)
     
 class MergeCSVResponse(BaseModel):
     cards_count: int
     users_count: int
     transactions_count: int
-    csv_path: Path
+    csv_path: str
     message: str
 
     @field_validator("csv_path", mode="after")
-    def check_path(cls, v: Path):
-        if not (v.suffix.lower() == ".csv" and v.is_file()):
+    def check_path(cls, v: str):
+        path=Path(v)
+        if not (path.suffix.lower() == ".csv" and path.is_file()):
             raise ValueError("The merged csv file does not exist")
-        return v
+        return str(path)
 
 
 @router.post("/merge-csv")
@@ -50,7 +52,7 @@ async def merge_csv_endpoint(request: MergeCSVRequest):
             cards_count=len(data.cards),
             users_count=len(data.users),
             transactions_count=len(data.transactions),
-            csv_path=MERGED_CSV_PATH,
+            csv_path=str(MERGED_CSV_PATH),
             message=f"The merged CSV file is saved in: {MERGED_CSV_PATH}"
         )
     except Exception as e:

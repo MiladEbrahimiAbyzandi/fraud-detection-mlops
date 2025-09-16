@@ -1,10 +1,14 @@
 from pathlib import Path
+from datetime import datetime
 
-BASE_DIR = Path(__file__).parent.parent/"fastapi_results"
+#STAMPED_PATH=datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+BASE_DIR = Path(__file__).parent.parent/"fastapi_results"#/STAMPED_PATH
+BASE_DIR.mkdir(parents=True, exist_ok=True)
 OUTPUTS_DIR = BASE_DIR / "outputs"
 OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
 INFERENCE_DIR = BASE_DIR / "inference"
 INFERENCE_DIR.mkdir(parents=True, exist_ok=True)
+
 INFERENCE_DATA_PATH = INFERENCE_DIR / "inference_data.csv"
 MERGED_CSV_PATH = OUTPUTS_DIR / "merged_data.csv"
 TRANSFORM_STAGE1= OUTPUTS_DIR / "transformed_stage1.csv"
@@ -26,6 +30,6 @@ Y_TRAIN_BALANCED_PATH = OUTPUTS_DIR / "y_train_balanced.csv"
 INFERENCE_RESULT = OUTPUTS_DIR / "inference_results.json"
 MODEL_PATH = OUTPUTS_DIR / "model.joblib"
 EVALUATION_METRICS_PATH = OUTPUTS_DIR / "evaluation_metrics.json"
-CARDS_PATH=BASE_DIR.parent/"src"/"data_loader"/"data"/"8"/"sd254_cards.csv"
-USERS_PATH=BASE_DIR.parent/"src"/"data_loader"/"data"/"8"/"sd254_users.csv"
-TRANSACTIONS_PATH=BASE_DIR.parent/"src"/"data_loader"/"data"/"User0_credit_card_transactions.csv"
+CARDS_PATH=BASE_DIR.parent/"raw_data"/"data"/"8"/"sd254_cards.csv"
+USERS_PATH=BASE_DIR.parent/"raw_data"/"data"/"8"/"sd254_users.csv"
+TRANSACTIONS_PATH=BASE_DIR.parent/"raw_data"/"data"/"8"/"User0_credit_card_transactions.csv"

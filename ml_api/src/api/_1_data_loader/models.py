@@ -123,7 +123,7 @@ class Transaction(BaseModel):
     @field_validator("MCC", mode='before')
     def validate_mcc(cls, v):
         if pd.isna(v) or v == '':   
-            return "Unknown"
+            return str("Unknown")
         return str(v)
 
     @field_validator("*", mode="before")
