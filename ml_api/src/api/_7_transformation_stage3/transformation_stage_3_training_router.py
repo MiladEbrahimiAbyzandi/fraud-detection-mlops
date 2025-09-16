@@ -10,34 +10,37 @@ from api.router_constants import X_TRAIN_TRANSFOMED2_PATH, X_TEST_TRANSFOMED2_PA
 router=APIRouter()
 
 class TransformationStage3Request(BaseModel):
-    X_train_transfomed : Path = X_TRAIN_TRANSFOMED2_PATH
-    X_test_transfomed : Path = X_TEST_TRANSFOMED2_PATH
+    X_train_transfomed : str = str(X_TRAIN_TRANSFOMED2_PATH)
+    X_test_transfomed : str = str(X_TEST_TRANSFOMED2_PATH)
 
     @field_validator("X_train_transfomed", "X_test_transfomed", mode="before")
-    def check_file_exists(cls, v: Path):
+    def check_file_exists(cls, v: str):
+        v=Path(v)
         if not(v.suffix.lower() == ".csv" and v.is_file()):
             raise ValueError("The CSV file is not found")
-        return v
+        return str(v)
 
 class TransformationStage3Response(BaseModel):
-    X_train_transformed3: Path
-    X_test_transformed3: Path
-    encoder_path: Path
-    scaler_path: Path
-    selected_columns_path: Path
+    X_train_transformed3: str
+    X_test_transformed3: str
+    encoder_path: str
+    scaler_path: str
+    selected_columns_path: str
     message: str
 
     @field_validator("X_train_transformed3", "X_test_transformed3", mode="after")
-    def check_csv_files(cls, v: Path):
+    def check_csv_files(cls, v: str):
+        v=Path(v)
         if not (v.is_file() and v.suffix.lower() == ".csv"):
             raise ValueError("The file must be a CSV")
-        return v
+        return str(v)
 
     @field_validator("encoder_path", "scaler_path", "selected_columns_path", mode="after")
-    def check_joblib_files(cls, v: Path):
+    def check_joblib_files(cls, v: str):
+        v=Path(v)
         if not (v.is_file() and v.suffix.lower() ==".joblib"):
             raise ValueError("The file must be a joblib file")
-        return v
+        return str(v)
     
 
 @router.post("/transformation-stage3", tags=["Transformation"])
@@ -59,11 +62,11 @@ async def transformation_stage3_training_endpoint(request: TransformationStage3R
 
         return (
             TransformationStage3Response(
-                X_train_transformed3=X_TRAIN_TRANSFOMED3_PATH,
-                X_test_transformed3=X_TEST_TRANSFORMED3_PATH,
-                encoder_path=ENCODER_PATH,
-                scaler_path=SCALER_PATH,
-                selected_columns_path=SELECTED_COLUMNS_PATH,
+                X_train_transformed3=str(X_TRAIN_TRANSFOMED3_PATH),
+                X_test_transformed3=str(X_TEST_TRANSFORMED3_PATH),
+                encoder_path=str(ENCODER_PATH),
+                scaler_path=str(SCALER_PATH),
+                selected_columns_path=str(SELECTED_COLUMNS_PATH),
                 message=f"Third stage transformation completed successfully. Files saved to: {X_TRAIN_TRANSFOMED3_PATH}, {X_TEST_TRANSFORMED3_PATH}, {ENCODER_PATH}, {SCALER_PATH}, {SELECTED_COLUMNS_PATH}"
         ))
     

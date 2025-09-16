@@ -10,30 +10,33 @@ from api.router_constants import X_TEST_TRANSFORMED3_PATH, Y_TEST_PATH, MODEL_PA
 
 router = APIRouter()
 class EvaluationRequest(BaseModel):
-    x_test_path: Path = X_TEST_TRANSFORMED3_PATH
-    y_test_path: Path = Y_TEST_PATH
-    model_path: Path = MODEL_PATH
+    x_test_path: str = str(X_TEST_TRANSFORMED3_PATH)
+    y_test_path: str = str(Y_TEST_PATH)
+    model_path: str = str(MODEL_PATH)
     @field_validator("x_test_path","y_test_path", mode="before")
-    def check_csv(cls, v: Path):
+    def check_csv(cls, v: str):
+        v=Path(v)
         if not (v.suffix.lower() == ".csv" and v.is_file()):
             raise ValueError("The file must be a CSV")
-        return v
+        return str(v)
     @field_validator("model_path", mode="after")
-    def check_model(cls, v: Path):
+    def check_model(cls, v: str):
+        v=Path(v)
         if not (v.suffix.lower() in [".pkl", ".joblib"] and v.is_file()):
             raise ValueError("the model file must be a .pkl or .joblib that exists")
-        return v
+        return str(v)
     
 class EvaluationResponse(BaseModel):
-    metrics: Path
+    metrics: str = str(EVALUATION_METRICS_PATH)
     message: str
     @field_validator("metrics", mode="after")
-    def check_json(cls, v: Path):
+    def check_json(cls, v: str):
+        v=Path(v)
         if not (v.suffix.lower() == ".json" and v.is_file()):
             raise ValueError("The metrics file must be a JSON")
-        return v
+        return str(v)
     
-@router.post("/evaluate", tags=["Evaluation"])
+@router.post("/evaluate")
 async def run_evaluation(request: EvaluationRequest) -> EvaluationResponse:
     """
     Endpoint to evaluate the trained model on the test dataset and save evaluation metrics."""
@@ -47,7 +50,7 @@ async def run_evaluation(request: EvaluationRequest) -> EvaluationResponse:
             json.dump(metrics, f)
 
         return EvaluationResponse(
-            metrics=EVALUATION_METRICS_PATH,
+            metrics=str(EVALUATION_METRICS_PATH),
             message=f"Model evaluation completed successfully and metrics saved to {EVALUATION_METRICS_PATH}"
         )
     except Exception as e:

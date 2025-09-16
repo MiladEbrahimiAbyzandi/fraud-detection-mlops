@@ -1,10 +1,14 @@
 from pathlib import Path
+from datetime import datetime
 
-BASE_DIR = Path(__file__).parent.parent/"fastapi_results"
+#STAMPED_PATH=datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+BASE_DIR = Path(__file__).parent.parent/"fastapi_results"#/STAMPED_PATH
+BASE_DIR.mkdir(parents=True, exist_ok=True)
 OUTPUTS_DIR = BASE_DIR / "outputs"
 OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
 INFERENCE_DIR = BASE_DIR / "inference"
 INFERENCE_DIR.mkdir(parents=True, exist_ok=True)
+
 INFERENCE_DATA_PATH = INFERENCE_DIR / "inference_data.csv"
 MERGED_CSV_PATH = OUTPUTS_DIR / "merged_data.csv"
 TRANSFORM_STAGE1= OUTPUTS_DIR / "transformed_stage1.csv"

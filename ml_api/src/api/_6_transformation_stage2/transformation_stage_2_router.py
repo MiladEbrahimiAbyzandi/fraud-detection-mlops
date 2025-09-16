@@ -5,7 +5,7 @@ import pandas as pd
 import json
 from api._6_transformation_stage2.transformation_stage_2 import transform_stage2
 from api.router_constants import X_TRAIN_PATH, X_TEST_PATH, X_TEST_TRANSFOMED2_PATH,X_TRAIN_TRANSFOMED2_PATH, METADATA_PATH
-
+from api._3_transformation_stage1.model import TransactionFeatures
 router=APIRouter()
 
 class TransformationStage2Request(BaseModel):
@@ -47,6 +47,20 @@ async def transformation_stage2_endpoint(request: TransformationStage2Request):
         X_train=pd.read_csv(request.x_train_path, parse_dates=["timestamp", "Acct_Open_Date", "Expires", "Date"]  )
         X_test=pd.read_csv(request.x_test_path, parse_dates=["timestamp", "Acct_Open_Date", "Expires", "Date"] )
         
+        # try:
+        #     X_train=load_X_train.copy()
+        #     X_test=load_X_test.copy()
+        #     validated_train=(TransactionFeatures(**row) for row in X_train.to_dict(orient="records"))
+        #     validated_test=(TransactionFeatures(**row) for row in X_test.to_dict(orient="records"))
+        #     X_train=pd.DataFrame([v.model_dump() for v in validated_train])
+        #     X_test=pd.DataFrame([v.model_dump() for v in validated_test])
+        
+        # except Exception as e:
+        #     raise HTTPException(
+        #         status_code=400,
+        #         detail=f"Data validation error: {e}"
+        #     )
+            
         with open(request.metadata, "r") as f:
             artifacts=json.load(f)
 
