@@ -1,0 +1,45 @@
+# Git
+.git
+.gitignore
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info
+*.egg
+
+# Virtual environments
+.env
+.venv
+
+# IDE/editor configs
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local data and artifacts (not needed inside container)
+data/
+artifacts/
+models/
+fastapi_results/
+raw_data/
+*.csv
+*.json
+*.joblib
+*.pkl
+
+# Docker
+Dockerfile
+docker-compose.yml
+
+# Local scripts (only for dev, not production)
+run_dev_bash.bash
+run_dev_powershell.ps1
+
+# Tests (exclude if you don’t need them inside container)
+tests/
