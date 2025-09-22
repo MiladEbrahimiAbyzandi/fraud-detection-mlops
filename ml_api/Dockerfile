@@ -1,7 +1,11 @@
-FROM python:3.11-slim
-RUN pip install uv
-WORKDIR /app
-COPY pyproject.toml uv.lock* ./
-RUN uv pip install --system 
-CMD ["uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "8080"]
+FROM python:3.13-slim
 
+WORKDIR /app
+
+COPY requirements.txt .
+
+RUN python -m pip install -r requirements.txt
+
+COPY . /app
+
+CMD ["/bin/bash", "./scripts/api/run_prod_bash.sh"] 
