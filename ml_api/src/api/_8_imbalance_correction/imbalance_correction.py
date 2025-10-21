@@ -2,6 +2,7 @@ import pandas as pd
 import logging
 from imblearn.over_sampling import SMOTE
 
+
 def handle_imbalance(X_train: pd.DataFrame, y_train: pd.Series) -> tuple[pd.DataFrame, pd.Series]:
     """Apply SMOTE."""
 
@@ -10,15 +11,16 @@ def handle_imbalance(X_train: pd.DataFrame, y_train: pd.Series) -> tuple[pd.Data
     logging.info(f"SMOTE Train Shape: {X_train.shape}, Fraud: {y_train.sum()}")
     return X_train, y_train
 
+
 if __name__ == "__main__":
     # Example usage
-    from api._1_data_loader.load_data import load_data
-    from api._2_merge_csvs.merge_data import merge_csvs
-    from api._3_transformation_stage1.transformation_stage_1 import transform_stage1
-    from api._4_splitter.data_splitter import split_data
-    from api._5_metadata.metadata_extractor import metadata
-    from api._6_transformation_stage2.transformation_stage_2 import transform_stage2
-    from api._7_transformation_stage3.transformation_stage3_training import transformation_stage3_training
+    from src.api._1_data_loader.load_data import load_data
+    from src.api._2_merge_csvs.merge_data import merge_csvs
+    from src.api._3_transformation_stage1.transformation_stage_1 import transform_stage1
+    from src.api._4_splitter.data_splitter import split_data
+    from src.api._5_metadata.metadata_extractor import metadata
+    from src.api._6_transformation_stage2.transformation_stage_2 import transform_stage2
+    from src.api._7_transformation_stage3.transformation_stage3_training import transformation_stage3_training
 
     data = load_data()
     df = merge_csvs(data.cards, data.users, data.transactions)
@@ -30,7 +32,7 @@ if __name__ == "__main__":
     # Transform stage 3
     X_train_transformed, X_test_transformed, encoder, scaler, selected_columns = transformation_stage3_training(
         X_train=X_train, X_test=X_test
-    )    
+    )
     # Handle imbalance
     X_train_balanced, y_train_balanced = handle_imbalance(X_train_transformed, y_train)
     logging.info("Imbalance handling completed successfully.")

@@ -1,13 +1,21 @@
 from fastapi import APIRouter, HTTPException
-#from pydantic import BaseModel, field_validator
-from pathlib import Path
-from api._7_transformation_stage3.transformation_stage3_inference import transformation_stage3_inference
-from api.router_constants import ENCODER_PATH, SCALER_PATH, SELECTED_COLUMNS_PATH, X_TEST_TRANSFOMED2_PATH, DF_INFERENCE_TRANSFORMED3_PATH
-#import pandas as pd
-import joblib
-from db.db import Database
 
-router=APIRouter()
+# from pydantic import BaseModel, field_validator
+from pathlib import Path
+from src.api._7_transformation_stage3.transformation_stage3_inference import transformation_stage3_inference
+from src.api.router_constants import (
+    ENCODER_PATH,
+    SCALER_PATH,
+    SELECTED_COLUMNS_PATH,
+    X_TEST_TRANSFOMED2_PATH,
+    DF_INFERENCE_TRANSFORMED3_PATH,
+)
+
+# import pandas as pd
+import joblib
+from src.db.db import Database
+
+router = APIRouter()
 # class TransformationStage3InferenceRequest(BaseModel):
 #     inference_csv_path: str = str(X_TEST_TRANSFOMED2_PATH)
 #     encoder_path: str = str(ENCODER_PATH)
@@ -21,14 +29,14 @@ router=APIRouter()
 #         if not(v.suffix.lower() == ".csv" and v.is_file()):
 #             raise ValueError("The CSV file for inference is not found")
 #         return str(v)
-    
+
 #     @field_validator("encoder_path", "scaler_path", "selected_columns_path", mode="before")
 #     def check_joblib_files(cls, v: str):
 #         v=Path(v)
 #         if not (v.is_file() and v.suffix.lower() ==".joblib"):
 #             raise ValueError("joblib files for calling encoder, scaler, or selected columns are not found")
 #         return str(v)
-    
+
 # class TransformationStage3InferenceResponse(BaseModel):
 #     message: str
 #     transfomation_stage_3_inference: str
@@ -39,6 +47,7 @@ router=APIRouter()
 #             raise ValueError("The final transfomed CSV file for inference is not found")
 #         return str(v)
 
+
 @router.post("/transformation-stage3-inference")
 async def transformation_stage3_inference_endpoint():
     """
@@ -46,31 +55,20 @@ async def transformation_stage3_inference_endpoint():
     """
     try:
         # Load objects
-        db=Database()
-        df=db.fetch_data('SELECT * FROM "X_train_transformed_stage2"')
+        db = Database()
+        df = db.fetch_data('SELECT * FROM "X_train_transformed_stage2"')
 
-        #df = pd.read_csv(request.inference_csv_path)
+        # df = pd.read_csv(request.inference_csv_path)
         encoder = joblib.load(ENCODER_PATH)
         scaler = joblib.load(SCALER_PATH)
         selected_columns = joblib.load(SELECTED_COLUMNS_PATH)
 
-        df=transformation_stage3_inference(
-            df=df,
-            encoder=encoder,
-            scaler=scaler,
-            selected_columns=selected_columns
-        )
+        df = transformation_stage3_inference(df=df, encoder=encoder, scaler=scaler, selected_columns=selected_columns)
 
-        db.store_data(df,"transformed_inference_data_stage3")
+        db.store_data(df, "transformed_inference_data_stage3")
         return "Third stage transformation for inference completed successfully."
-    
+
     except Exception as e:
         raise HTTPException(
-            status_code=500,
-            detail=f"An error occurred during the third stage transformation for inference: {str(e)}"
+            status_code=500, detail=f"An error occurred during the third stage transformation for inference: {str(e)}"
         )
-
-    
-
-
-        

@@ -1,12 +1,15 @@
 from fastapi import APIRouter, HTTPException
-#from pydantic import BaseModel, field_validator
-#from pathlib import Path
-from api._9_training.training import train
-#import pandas as pd
+
+# from pydantic import BaseModel, field_validator
+# from pathlib import Path
+from src.api._9_training.training import train
+
+# import pandas as pd
 import joblib
-from api.router_constants import X_TRAIN_BALANCED_PATH, Y_TRAIN_BALANCED_PATH, MODEL_PATH
-from db.db import Database
+from src.api.router_constants import X_TRAIN_BALANCED_PATH, Y_TRAIN_BALANCED_PATH, MODEL_PATH
+from src.db.db import Database
 from typing import Literal
+
 router = APIRouter()
 
 # class TrainingRequest(BaseModel):
@@ -34,10 +37,10 @@ router = APIRouter()
 #         if v not in ["xgboost", "randomforest"]:
 #             raise ValueError("Invalid model name. Choose 'xgboost' or 'randomforest'.")
 #         return v
-    
+
 # class TrainingResponse(BaseModel):
 #     message: str
-#     model_path: str 
+#     model_path: str
 
 #     @field_validator("model_path", mode="after")
 #     def check_model_path(cls, v: str):
@@ -46,23 +49,23 @@ router = APIRouter()
 #             raise ValueError("the model file must be a .pkl or .joblib that exists")
 #         return str(v)
 
+
 @router.post("/train")
-async def run_training(model_name: Literal["xgboost","randomforest"]):
+async def run_training(model_name: Literal["xgboost", "randomforest"]):
     """
     Endpoint to train a machine learning model using the balanced training dataset."""
     try:
-        
-        db=Database()
+        db = Database()
         # X_train = pd.read_csv(request.x_train_path)
         # y_train = pd.read_csv(request.y_train_path).squeeze()  # Convert DataFrame to Series if needed
 
-        X_train= db.fetch_data('SELECT * FROM "X_train_balanced"')
-        y_train= db.fetch_data('SELECT * FROM "y_train_balanced"')
+        X_train = db.fetch_data('SELECT * FROM "X_train_balanced"')
+        y_train = db.fetch_data('SELECT * FROM "y_train_balanced"')
 
         model = train(X_train, y_train, model_name=model_name)
 
         with open(MODEL_PATH, "wb") as f:
-            joblib.dump(model,f)
+            joblib.dump(model, f)
 
         return f"Model {model_name} trained and saved succesfully"
     except Exception as e:

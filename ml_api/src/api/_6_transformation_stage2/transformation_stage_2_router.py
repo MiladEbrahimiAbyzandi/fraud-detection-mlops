@@ -1,13 +1,21 @@
 from fastapi import APIRouter, HTTPException
-#from pydantic import BaseModel, field_validator
+
+# from pydantic import BaseModel, field_validator
 from pathlib import Path
 import pandas as pd
 import json
-from api._6_transformation_stage2.transformation_stage_2 import transform_stage2
-from db.db import Database
-from api.router_constants import X_TRAIN_PATH, X_TEST_PATH, X_TEST_TRANSFOMED2_PATH,X_TRAIN_TRANSFOMED2_PATH, METADATA_PATH
-#from api._3_transformation_stage1.model import TransactionFeatures
-router=APIRouter()
+from src.api._6_transformation_stage2.transformation_stage_2 import transform_stage2
+from src.db.db import Database
+from src.api.router_constants import (
+    X_TRAIN_PATH,
+    X_TEST_PATH,
+    X_TEST_TRANSFOMED2_PATH,
+    X_TRAIN_TRANSFOMED2_PATH,
+    METADATA_PATH,
+)
+
+# from src.api._3_transformation_stage1.model import TransactionFeatures
+router = APIRouter()
 
 # class TransformationStage2Request(BaseModel):
 #     x_train_path: str =str(X_TRAIN_PATH)
@@ -26,7 +34,7 @@ router=APIRouter()
 #         if not (v.suffix.lower() == ".json" and v.is_file()):
 #             raise ValueError("The metadata JSON file is not found")
 #         return str(v)
-    
+
 # class TransformationStage2Response(BaseModel):
 #     X_train_transformed: str
 #     X_test_transformed: str
@@ -39,6 +47,7 @@ router=APIRouter()
 #             raise ValueError("The file must be a CSV")
 #         return str(v)
 
+
 @router.post("/transformation-stage2")
 async def transformation_stage2_endpoint():
     """
@@ -47,11 +56,11 @@ async def transformation_stage2_endpoint():
     try:
         # X_train=pd.read_csv(request.x_train_path, parse_dates=["timestamp", "Acct_Open_Date", "Expires", "Date"]  )
         # X_test=pd.read_csv(request.x_test_path, parse_dates=["timestamp", "Acct_Open_Date", "Expires", "Date"] )
-        
-        db=Database()
 
-        X_train= db.fetch_data('SELECT * FROM "X_train"')
-        X_test= db.fetch_data('SELECT * FROM "X_test"')
+        db = Database()
+
+        X_train = db.fetch_data('SELECT * FROM "X_train"')
+        X_test = db.fetch_data('SELECT * FROM "X_test"')
 
         # try:
         #     X_train=load_X_train.copy()
@@ -60,29 +69,26 @@ async def transformation_stage2_endpoint():
         #     validated_test=(TransactionFeatures(**row) for row in X_test.to_dict(orient="records"))
         #     X_train=pd.DataFrame([v.model_dump() for v in validated_train])
         #     X_test=pd.DataFrame([v.model_dump() for v in validated_test])
-        
+
         # except Exception as e:
         #     raise HTTPException(
         #         status_code=400,
         #         detail=f"Data validation error: {e}"
         #     )
-            
+
         with open(METADATA_PATH, "r") as f:
-            artifacts=json.load(f)
+            artifacts = json.load(f)
 
-        X_train_transformed=transform_stage2(artifacts, X_train)
-        X_test_transformed=transform_stage2(artifacts, X_test)
+        X_train_transformed = transform_stage2(artifacts, X_train)
+        X_test_transformed = transform_stage2(artifacts, X_test)
 
-        db.store_data(X_train_transformed,"X_train_transformed_stage2")
-        db.store_data(X_test_transformed,"X_test_transformed_stage2")
+        db.store_data(X_train_transformed, "X_train_transformed_stage2")
+        db.store_data(X_test_transformed, "X_test_transformed_stage2")
 
         # X_train_transformed.to_csv(X_TRAIN_TRANSFOMED2_PATH, index=False)
         # X_test_transformed.to_csv(X_TEST_TRANSFOMED2_PATH, index=False)
 
         return "Second stage transformation completed successfully. Tables saved to databse"
-    
+
     except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail= str(e)
-        )
+        raise HTTPException(status_code=500, detail=str(e))

@@ -1,12 +1,12 @@
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, field_validator 
+from pydantic import BaseModel, field_validator
 from pathlib import Path
 import joblib
 import pandas as pd
 import json
-from api._10_evaluate.evaluate import evaluate
-from api.router_constants import X_TEST_TRANSFORMED3_PATH, Y_TEST_PATH, MODEL_PATH, EVALUATION_METRICS_PATH
-from db.db import Database
+from src.api._10_evaluate.evaluate import evaluate
+from src.api.router_constants import X_TEST_TRANSFORMED3_PATH, Y_TEST_PATH, MODEL_PATH, EVALUATION_METRICS_PATH
+from src.db.db import Database
 
 router = APIRouter()
 # class EvaluationRequest(BaseModel):
@@ -25,7 +25,7 @@ router = APIRouter()
 #         if not (v.suffix.lower() in [".pkl", ".joblib"] and v.is_file()):
 #             raise ValueError("the model file must be a .pkl or .joblib that exists")
 #         return str(v)
-    
+
 # class EvaluationResponse(BaseModel):
 #     metrics: str = str(EVALUATION_METRICS_PATH)
 #     message: str
@@ -35,18 +35,18 @@ router = APIRouter()
 #         if not (v.suffix.lower() == ".json" and v.is_file()):
 #             raise ValueError("The metrics file must be a JSON")
 #         return str(v)
-    
+
+
 @router.post("/evaluate")
 async def run_evaluation():
     """
     Endpoint to evaluate the trained model on the test dataset and save evaluation metrics."""
     try:
-
-        db=Database()
+        db = Database()
         # X_test = pd.read_csv(request.x_test_path)
         # y_test = pd.read_csv(request.y_test_path).squeeze()  # Convert DataFrame to Series if needed
-        X_test= db.fetch_data('SELECT * FROM "X_test_transformed_stage3"')
-        y_test= db.fetch_data('SELECT * FROM "y_test"')
+        X_test = db.fetch_data('SELECT * FROM "X_test_transformed_stage3"')
+        y_test = db.fetch_data('SELECT * FROM "y_test"')
 
         model = joblib.load(MODEL_PATH)
         metrics = evaluate(model, X_test, y_test)
@@ -55,6 +55,6 @@ async def run_evaluation():
             json.dump(metrics, f)
 
         return f"Model evaluation completed successfully and metrics saved to {EVALUATION_METRICS_PATH}"
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

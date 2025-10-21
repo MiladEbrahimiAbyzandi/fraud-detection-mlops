@@ -1,12 +1,13 @@
 from fastapi import APIRouter, HTTPException
-#from pydantic import BaseModel, field_validator
+
+# from pydantic import BaseModel, field_validator
 from pathlib import Path
 import joblib
 import json
 import pandas as pd
-from db.db import Database
+from src.db.db import Database
 
-from .router_constants import DF_INFERENCE_TRANSFORMED3_PATH, INFERENCE_RESULT,MODEL_PATH
+from .router_constants import DF_INFERENCE_TRANSFORMED3_PATH, INFERENCE_RESULT, MODEL_PATH
 
 router = APIRouter()
 
@@ -31,29 +32,25 @@ router = APIRouter()
 #     message: str
 #     inference_results_path: str = str(INFERENCE_RESULT)
 
+
 @router.post("/inference")
 async def run_inference():
     """
     Endpoint to perform inference using the trained model on the transformed inference data."""
     try:
-        db=Database()
-        model=joblib.load(MODEL_PATH)
+        db = Database()
+        model = joblib.load(MODEL_PATH)
         # df=pd.read_csv(request.df_inference_transformed3_path)
-        df=db.fetch_data('SELECT * FROM "transformed_inference_data_stage3"')
-        prediction=model.predict(df)
-        prediction_proba=model.predict_proba(df)[:, 1]
-        
-        output={
-            "predictions": prediction.tolist(),
-            "predictions_proba": prediction_proba.tolist()
-        }
+        df = db.fetch_data('SELECT * FROM "transformed_inference_data_stage3"')
+        prediction = model.predict(df)
+        prediction_proba = model.predict_proba(df)[:, 1]
+
+        output = {"predictions": prediction.tolist(), "predictions_proba": prediction_proba.tolist()}
 
         with open(INFERENCE_RESULT, "w") as f:
             json.dump(output, f)
-        
-        return f"Inferece completed successfully and result saved to {INFERENCE_RESULT}", 
-        
-    
+
+        return (f"Inferece completed successfully and result saved to {INFERENCE_RESULT}",)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
