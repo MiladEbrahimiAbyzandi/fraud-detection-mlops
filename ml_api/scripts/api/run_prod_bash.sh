@@ -18,4 +18,4 @@ PORT=80
 
 echo "# Running fraud-detection-ml-api in production mode"
 
-uvicorn src.app:app --host=0.0.0.0 --port $PORT --reload 
+uvicorn src.app:app --host=0.0.0.0 --port $PORT
