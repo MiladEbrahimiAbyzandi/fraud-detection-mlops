@@ -5,9 +5,12 @@ BASE_DIR="$(dirname "$SCRIPT_DIR")"
 
 echo "Running $SCRIPT_NAME"
 echo "Script directory: $SCRIPT_DIR"
+echo "Base directory: $BASE_DIR"
 
 GCP_PROJECT_ID=data-461916
 GCP_REGION=us-central1
+
+APP_NAME=ml-api
 
 echo "📦 Creating artifact repository for docker images if it doesn't exist..."
 if ! gcloud artifacts repositories describe "$GCP_PROJECT_ID" \
@@ -25,8 +28,17 @@ echo "🐳 Configuring docker to use the artifact repository..."
 gcloud auth configure-docker $GCP_REGION-docker.pkg.dev --project=$GCP_PROJECT_ID
 
 
+# Build the docker image
+echo "Building the Docker image"
+docker build -t $APP_NAME:latest -f $BASE_DIR/Dockerfile $BASE_DIR
+
+echo "Tag Docker image for push to artifact repository" 
+docker tag $APP_NAME:latest $GCP_REGION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_PROJECT_ID/$APP_NAME:latest
+
+echo "Push Docker image to artifact repository"
+docker push $GCP_REGION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_PROJECT_ID/$APP_NAME:latest
 # TODO 
-- build the docker image
-- tag the docker image
-- push the docker image to the artifact repository
-- deploy the docker image to Cloud Run
+# - build the docker image
+# - tag the docker image
+# - push the docker image to the artifact repository
+# - deploy the docker image to Cloud Run
