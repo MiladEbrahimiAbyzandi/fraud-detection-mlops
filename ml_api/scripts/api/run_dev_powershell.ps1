@@ -25,4 +25,4 @@ $PORT = if ($env:API_PORT) { $env:API_PORT } else { "8001" }
 Write-Host "# Running fraud-detection-ml-api in dev mode"
 Write-Host ""
 
-uvicorn src.app:app --host=0.0.0.0 --port $PORT --reload 
+uvicorn src.main:app --host=0.0.0.0 --port $PORT --reload 
