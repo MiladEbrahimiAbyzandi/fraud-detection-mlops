@@ -1,0 +1,57 @@
+name: GCP Cloud Run Deployment
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - release
+env:
+  REGISTRY_URL: us-central1-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_PROJECT_ID }}
+  IMAGE_NAME: ml-api
+  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY_SHARPLY }}
+  GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+  REGION_NAME: us-central1
+  GCP_SA_KEY_FILE_NAME: project_sa_key.json
+  IMAGE_TAG: ${{vars.REGION_NAME}}/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_PROJECT_ID }}/ml-api:${{ github.sha }}
+  BUILD_VERSION: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
+ 
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v2'
+      with:
+        version: '>= 363.0.0'
+
+    - name: 'Use gcloud CLI'
+      run: |
+        gcloud info
+        gcloud auth list
+
+    - name: 'Authenticate Service Account'
+      run: |
+        gcloud config set project $GCP_PROJECT_ID
+        echo $GCP_SA_KEY > ${HOME}/$GCP_SA_KEY_FILE_NAME
+        gcloud auth activate-service-account --key-file=${HOME}/$GCP_SA_KEY_FILE_NAME
+        gcloud auth configure-docker ${REGION_NAME} --quiet
+
+    - name: 'Build and Push Image'
+      run: |
+        DIR_NAME="ml_api/scripts"
+
+        echo "GCP_PROJECT_ID=$GCP_PROJECT_ID" > .env.build
+        echo "GCP_REGION=$REGION_NAME" >> .env.build
+        echo "APP_NAME=$IMAGE_NAME" >> .env.build
+
+        bash $DIR_NAME/build_and_deploy.sh
