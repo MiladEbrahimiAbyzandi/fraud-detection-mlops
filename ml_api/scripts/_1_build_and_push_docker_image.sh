@@ -7,23 +7,6 @@ echo "Running $SCRIPT_NAME"
 echo "Script directory: $SCRIPT_DIR"
 echo "Base directory: $BASE_DIR"
 
-# Parse command line arguments with defaults
-GCP_PROJECT_ID="$1"
-GCP_REGION="$2"
-APP_NAME="$3"
-
-echo "Using configuration:"
-echo "  GCP_PROJECT_ID: $GCP_PROJECT_ID"
-echo "  GCP_REGION: $GCP_REGION"
-echo "  APP_NAME: $APP_NAME"
-
-# Validate required arguments
-if [ -z "$GCP_PROJECT_ID" ] || [ -z "$GCP_REGION" ] || [ -z "$APP_NAME" ]; then
-  echo "Error: Missing required arguments"
-  echo "Usage: $SCRIPT_NAME <GCP_PROJECT_ID> <GCP_REGION> <APP_NAME>"
-  exit 1
-fi
-
 
 echo "📦 Creating artifact repository for docker images if it doesn't exist..."
 if ! gcloud artifacts repositories describe "$GCP_PROJECT_ID" \
