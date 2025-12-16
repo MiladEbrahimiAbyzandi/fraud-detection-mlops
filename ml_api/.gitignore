@@ -4,7 +4,6 @@
 .env
 .venv/
 .vscode/
-experiments/
 __pycache__/
 build/
 .idea/
