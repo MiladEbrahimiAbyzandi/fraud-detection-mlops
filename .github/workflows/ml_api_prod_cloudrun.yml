@@ -48,5 +48,10 @@ jobs:
 
     - name: 'Build and Push Image'
       run: |
-        DIR_NAME="ml_api"
-        bash $DIR_NAME/scripts/_1_build_and_push_docker_image.sh $GCP_PROJECT_ID $REGION_NAME $IMAGE_NAME 
+        DIR_NAME="ml_api/scripts"
+
+        echo "GCP_PROJECT_ID=$GCP_PROJECT_ID" > .env.build
+        echo "GCP_REGION=$REGION_NAME" >> .env.build
+        echo "APP_NAME=$IMAGE_NAME" >> .env.build
+
+        bash $DIR_NAME/build_and_deploy.sh
