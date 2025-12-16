@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - release
 env:
   REGISTRY_URL: us-central1-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_PROJECT_ID }}
   IMAGE_NAME: api-app
