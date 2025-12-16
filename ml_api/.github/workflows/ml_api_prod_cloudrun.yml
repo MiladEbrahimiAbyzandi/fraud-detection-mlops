@@ -49,5 +49,4 @@ jobs:
     - name: 'Build and Push Image'
       run: |
         DIR_NAME="ml_api"
-
         bash $DIR_NAME/scripts/_1_build_and_push_docker_image.sh
