@@ -42,3 +42,14 @@ docker push $GCP_REGION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_PROJECT_ID/$APP_NAME
 # - tag the docker image
 # - push the docker image to the artifact repository
 # - deploy the docker image to Cloud Run
+echo "🚀 Deploying Docker image to Cloud Run..."
+gcloud run deploy $APP_NAME \
+  --image=$GCP_REGION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_PROJECT_ID/$APP_NAME:latest \
+  --region=$GCP_REGION \
+  --project=$GCP_PROJECT_ID \
+  --min-instances=0 \
+  --max-instances=2 \
+  --port=80 \
+  --allow-unauthenticated
+
+echo "✅ Deployment complete!"
