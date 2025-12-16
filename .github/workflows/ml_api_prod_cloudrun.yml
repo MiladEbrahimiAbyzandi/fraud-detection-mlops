@@ -8,12 +8,12 @@ on:
       - release
 env:
   REGISTRY_URL: us-central1-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_PROJECT_ID }}
-  IMAGE_NAME: api-app
+  IMAGE_NAME: ml-api
   GCP_SA_KEY: ${{ secrets.GCP_SA_KEY_SHARPLY }}
   GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
-  REGION_URL: us-central1
+  REGION_NAME: us-central1
   GCP_SA_KEY_FILE_NAME: project_sa_key.json
-  IMAGE_TAG: ${{vars.REGION_URL}}/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_PROJECT_ID }}/api-app:${{ github.sha }}
+  IMAGE_TAG: ${{vars.REGION_NAME}}/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_PROJECT_ID }}/ml-api:${{ github.sha }}
   BUILD_VERSION: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
  
 
@@ -44,9 +44,9 @@ jobs:
         gcloud config set project $GCP_PROJECT_ID
         echo $GCP_SA_KEY > ${HOME}/$GCP_SA_KEY_FILE_NAME
         gcloud auth activate-service-account --key-file=${HOME}/$GCP_SA_KEY_FILE_NAME
-        gcloud auth configure-docker ${REGION_URL} --quiet
+        gcloud auth configure-docker ${REGION_NAME} --quiet
 
     - name: 'Build and Push Image'
       run: |
         DIR_NAME="ml_api"
-        bash $DIR_NAME/scripts/_1_build_and_push_docker_image.sh
+        bash $DIR_NAME/scripts/_1_build_and_push_docker_image.sh $GCP_PROJECT_ID $REGION_NAME $IMAGE_NAME 
