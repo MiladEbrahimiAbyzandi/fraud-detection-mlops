@@ -5,20 +5,18 @@ on:
   push:
     branches:
       - main
-      - milad/sharply-16
 env:
-  GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID_SHARPLY_PROD }}
-  REGISTRY_URL: us-central1-docker.pkg.dev/${{ vars.GCP_PROJECT_ID_SHARPLY_PROD }}/${{ vars.GCP_PROJECT_ID_SHARPLY_PROD }}
-  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY_SHARPLY_PROD }}
+  REGISTRY_URL: us-central1-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_PROJECT_ID }}
   IMAGE_NAME: api-app
   GCP_SA_KEY_FILE_NAME: project_sa_key.json
-  IMAGE_TAG: ${{vars.REGION_URL}}/${{ vars.GCP_PROJECT_ID_SHARPLY_PROD }}/${{ vars.GCP_PROJECT_ID_SHARPLY_PROD }}/api-app:${{ github.sha }}
+  IMAGE_TAG: ${{vars.REGION_URL}}/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_PROJECT_ID }}/api-app:${{ github.sha }}
   BUILD_VERSION: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
  
 
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
+    environment: dev
 
     steps:
     - name: Checkout code
@@ -30,7 +28,7 @@ jobs:
     - id: 'auth'
       uses: 'google-github-actions/auth@v2'
       with:
-        credentials_json: '${{ secrets.GCP_SA_KEY_SHARPLY_PROD }}'
+        credentials_json: '${{ secrets.GCP_SA_KEY_SHARPLY }}'
 
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v2'
