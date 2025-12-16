@@ -54,4 +54,4 @@ jobs:
         echo "GCP_REGION=$REGION_NAME" >> .env.build
         echo "APP_NAME=$IMAGE_NAME" >> .env.build
 
-        bash $DIR_NAME/_1_build_and_push_docker_image.sh
+        bash $DIR_NAME/build_and_deploy.sh
