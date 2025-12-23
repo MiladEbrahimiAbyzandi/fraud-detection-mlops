@@ -54,7 +54,10 @@ async def run_evaluation():
         with open(EVALUATION_METRICS_PATH, "w") as f:
             json.dump(metrics, f)
 
-        return f"Model evaluation completed successfully and metrics saved to {EVALUATION_METRICS_PATH}"
+        return {
+            "message": f"Model evaluation completed successfully and metrics saved to {EVALUATION_METRICS_PATH}",
+            "metrics": metrics,
+        }
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

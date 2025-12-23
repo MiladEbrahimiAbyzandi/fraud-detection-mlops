@@ -37,9 +37,17 @@ router = APIRouter()
 #         if not (path.suffix.lower() == ".csv" and path.is_file()):
 #             raise ValueError("The merged csv file does not exist")
 #         return str(path)
+MERGE_CSV_DESCRIPTION_MARKDOWN = """
+### Merge CSVs
+Step 1 - Load data and Merge three CSV files and return the counts of cards, users, transactions and save the merged csv file.
+"""
 
 
-@router.post("/merge-csv")
+@router.post(
+    "/merge-csv",
+    name="Step 1 - Load data and Merge three CSV files and return the counts of cards, users, transactions and save the merged csv file.",
+    description=MERGE_CSV_DESCRIPTION_MARKDOWN,
+)
 async def merge_csv_endpoint():
     """
     Load data and Merge three CSV files and return the counts of cards, users, transactions and save the merged csv file.
