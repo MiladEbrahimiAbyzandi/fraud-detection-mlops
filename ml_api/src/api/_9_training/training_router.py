@@ -64,6 +64,9 @@ async def run_training(model_name: Literal["xgboost", "randomforest"]):
 
         model = train(X_train, y_train, model_name=model_name)
 
+        # TODO
+        # Save the model in Google Cloud Storage
+
         with open(MODEL_PATH, "wb") as f:
             joblib.dump(model, f)
 

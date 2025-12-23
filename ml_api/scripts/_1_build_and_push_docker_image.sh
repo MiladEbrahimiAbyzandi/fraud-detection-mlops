@@ -43,6 +43,7 @@ gcloud run deploy $APP_NAME \
   --image=$GCP_REGION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_PROJECT_ID/$APP_NAME:latest \
   --region=$GCP_REGION \
   --project=$GCP_PROJECT_ID \
+  --service-account=$GCP_SERVICE_ACCOUNT_EMAIL \
   --min-instances=0 \
   --max-instances=2 \
   --port=80 \

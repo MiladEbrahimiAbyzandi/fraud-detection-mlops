@@ -5,7 +5,7 @@ import os
 
 class Database:
     def __init__(self):
-        self.DATABASE_URL = os.environ["DATABASE_URL"]
+        self.DATABASE_URL = "postgresql://neondb_owner:npg_LFzuUHeI8w5s@ep-royal-leaf-a8q3yo6t-pooler.eastus2.azure.neon.tech/neondb?sslmode=require&channel_binding=require"
         self.engine = create_engine(self.DATABASE_URL, pool_pre_ping=True)
 
     def fetch_data(self, query: str) -> pd.DataFrame:

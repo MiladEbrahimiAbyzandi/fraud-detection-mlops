@@ -50,7 +50,10 @@ async def run_inference():
         with open(INFERENCE_RESULT, "w") as f:
             json.dump(output, f)
 
-        return (f"Inferece completed successfully and result saved to {INFERENCE_RESULT}",)
+        return {
+            "message": f"Inferece completed successfully and result saved to {INFERENCE_RESULT}",
+            "output": output,
+        }
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

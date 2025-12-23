@@ -5,3 +5,4 @@
 - Model Inference
 - Better Swagger Documentation
 - Improve ReadMe
+- Save your model in Google Cloud Storage

@@ -53,6 +53,7 @@ jobs:
         echo "GCP_PROJECT_ID=$GCP_PROJECT_ID" > .env.build
         echo "GCP_REGION=$REGION_NAME" >> .env.build
         echo "APP_NAME=$IMAGE_NAME" >> .env.build
+        echo "GCP_SERVICE_ACCOUNT_EMAIL=$GCP_SERVICE_ACCOUNT_EMAIL" >> .env.build
 
         gcloud secrets versions access latest --secret="${{ env.ENV_FILE_GCP_SECRET_NAME }}" > $DIR_NAME/cloudrun.env
         bash $DIR_NAME/build_and_deploy.sh

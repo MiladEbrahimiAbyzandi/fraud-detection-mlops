@@ -23,4 +23,4 @@ fi
 
 echo "# Running fraud-detection-ml-api in dev mode"
 
-uvicorn src.main:app --host=0.0.0.0 --port "${PORT}" --reload 
+uvicorn src.main:app --host=0.0.0.0 --port 8000 --reload 
