@@ -17,17 +17,37 @@ from src.api._9_training.training_router import router as training_router
 from src.api._10_evaluate.model_evaluation_router import router as model_evaluation_router
 from src.api.inference_router import router as inference_router
 
+
+description = """
+## Welcome to the Fraud Detection API 👋
+
+This API provides endpoints to train, evaluate, and deploy a machine learning model for fraud detection. Built by Milad, the system guides you through the entire ML workflow, including data validation, transformations, model building, model evaluation, and inference.
+
+### How it works
+<ul>
+<li>Upload your CSV data files (train and/or test data)</li>
+<li>The system automatically validates schemas and preprocesses data</li>
+<li>Train and evaluate the fraud detection model via dedicated endpoints</li>
+<li>Use the inference endpoints to detect fraud in new data</li>
+</ul>
+
+### Notes
+- Max file size: 10MB per upload
+- Supported format: CSV only
+- See each endpoint documentation for required schemas
+"""
+
 app = FastAPI(
     title="Fraud Detection API",
-    description="API for Transaction Fraud Detection Model",
+    description=description,
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
 )
 
 app.include_router(health_router, prefix="/api/v1", tags=["Health"])
-app.include_router(merge_csv_router, prefix="/api/v1", tags=["Step 1: Data"])
-app.include_router(transformation_stage1_router, prefix="/api/v1", tags=["Step 2: Transformation"])
+app.include_router(merge_csv_router, prefix="/api/v1", tags=["Model Training"])
+app.include_router(transformation_stage1_router, prefix="/api/v1", tags=["Model Training"])
 app.include_router(splitter_router, prefix="/api/v1", tags=["Step 3 (just for training purpose): splitter"])
 app.include_router(artifacts_router, prefix="/api/v1", tags=["Step 4 (just for training purpose): Metadata"])
 app.include_router(transformation_stage2_router, prefix="/api/v1", tags=["Step 5: Transformation"])

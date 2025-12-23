@@ -5,19 +5,22 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 BASE_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
 SRC_DIR="$BASE_DIR/src"
 
+echo "SCRIPT_DIR: $SCRIPT_DIR"
 echo "BASE_DIR: $BASE_DIR"
 echo "SRC_DIR: $SRC_DIR"    
 
-# Load environment variables from .env file
-envFile="$SRC_DIR/.env"
-if [ -f "$envFile" ]; then
-    export $(cat "$envFile" | grep -v '^#' | xargs)
+
+# Load environment variables from .env.local if it exists
+if [ -f "$SCRIPT_DIR/../.env.local" ]; then
+  echo "Loading environment variables from .env.local..."
+  set -a
+  source "$SCRIPT_DIR/../.env.local"
+  set +a
+else
+  echo "Warning: .env.local file not found at $SCRIPT_DIR/../.env.local"
 fi
 
-# Use API_PORT from .env or default to 8001
-PORT=${API_PORT:-8001}
 
 echo "# Running fraud-detection-ml-api in dev mode"
-echo ""
 
-uvicorn src.app:app --host=0.0.0.0 --port $PORT --reload 
+uvicorn src.main:app --host=0.0.0.0 --port "${PORT}" --reload 

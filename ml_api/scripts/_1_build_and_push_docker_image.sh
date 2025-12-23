@@ -46,6 +46,7 @@ gcloud run deploy $APP_NAME \
   --min-instances=0 \
   --max-instances=2 \
   --port=80 \
+  --env-vars-file=$SCRIPT_DIR/cloudrun.env \
   --allow-unauthenticated
 
 echo "✅ Deployment complete!"
