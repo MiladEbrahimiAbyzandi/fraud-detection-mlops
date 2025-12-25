@@ -17,53 +17,60 @@ from src.api._9_training.training_router import router as training_router
 from src.api._10_evaluate.model_evaluation_router import router as model_evaluation_router
 from src.api.inference_router import router as inference_router
 
-
 description = """
-## Welcome to the Fraud Detection API 👋
+## Fraud Detection API 👋
 
-This API provides endpoints to train, evaluate, and deploy a machine learning model for fraud detection. Built by Milad, the system guides you through the entire ML workflow, including data validation, transformations, model building, model evaluation, and inference.
+This API provides an end-to-end machine learning pipeline for fraud detection, including:
+**data preparation**, **feature engineering**, **training**, **evaluation**, and **inference**.
 
-### How it works
-<ul>
-<li>Upload your CSV data files (train and/or test data)</li>
-<li>The system automatically validates schemas and preprocesses data</li>
-<li>Train and evaluate the fraud detection model via dedicated endpoints</li>
-<li>Use the inference endpoints to detect fraud in new data</li>
-</ul>
+### Main workflow
+
+#### Training
+1. **Merge CSVs**: combine cards, users, and transactions into one dataset  
+2. **Transformation Stage 1**: basic feature engineering (timestamps, demographics, ratios, risk flags)  
+3. **Split**: stratified train/test split using `Is_Fraud`  
+4. **Metadata Artifacts**: compute training-only metadata (high-risk states/cities/MCC/merchants, thresholds)  
+5. **Transformation Stage 2**: metadata-based risk and behavior features  
+6. **Transformation Stage 3 (Training)**: final preprocessing for modeling (drop columns, one-hot encode, scale, feature selection)  
+7. **Imbalance Correction**: SMOTE oversampling on training data only  
+8. **Training**: train a model (e.g., XGBoost or Random Forest) and save it as an artifact  
+9. **Evaluation**: compute metrics (accuracy, precision, recall, F1, ROC-AUC, confusion matrix)
+
+#### Inference
+1. **Transformation Stage 1 + Stage 2 + Stage 3 (Inference)**: apply the same preprocessing using saved artifacts  
+2. **Inference**: load the saved model and generate predictions + probabilities for new data
 
 ### Notes
-- Max file size: 10MB per upload
-- Supported format: CSV only
-- See each endpoint documentation for required schemas
+- All endpoints are under the prefix: `/api/v1`
+- Use `/docs` for interactive Swagger documentation and to test endpoints
+- Training-only artifacts (metadata, encoder, scaler, selected columns, model) should be reused for inference to keep behavior consistent
 """
+
 
 app = FastAPI(
     title="Fraud Detection API",
-    description=description,
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    description=description,
 )
 
 app.include_router(health_router, prefix="/api/v1", tags=["Health"])
-app.include_router(merge_csv_router, prefix="/api/v1", tags=["Model Training"])
-app.include_router(transformation_stage1_router, prefix="/api/v1", tags=["Model Training"])
-app.include_router(splitter_router, prefix="/api/v1", tags=["Step 3 (just for training purpose): splitter"])
-app.include_router(artifacts_router, prefix="/api/v1", tags=["Step 4 (just for training purpose): Metadata"])
-app.include_router(transformation_stage2_router, prefix="/api/v1", tags=["Step 5: Transformation"])
+app.include_router(merge_csv_router, prefix="/api/v1")
+app.include_router(transformation_stage1_router, prefix="/api/v1")
+app.include_router(splitter_router, prefix="/api/v1")
+app.include_router(artifacts_router, prefix="/api/v1")
+app.include_router(transformation_stage2_router, prefix="/api/v1")
 app.include_router(
-    transformation_stage3_training_router, prefix="/api/v1", tags=["Step 6(just for training purpose): Transformation"]
-)
+    transformation_stage3_training_router, prefix="/api/v1")
 app.include_router(
     transformation_stage_3_inference_router,
     prefix="/api/v1",
-    tags=["Step 6(just for Inference purpose): Transformation"],
 )
 app.include_router(
-    imbalance_correction_router, prefix="/api/v1", tags=["Step 7(just for training purpose): Imbalance Correction"]
-)
-app.include_router(inference_router, prefix="/api/v1", tags=["Step 7(just for Inference purpose): Inference"])
+    imbalance_correction_router, prefix="/api/v1")
+app.include_router(inference_router, prefix="/api/v1")
+app.include_router(training_router, prefix="/api/v1")
 app.include_router(
-    model_evaluation_router, prefix="/api/v1", tags=["Step 9(just for training puprose): model Evaluation"]
-)
-app.include_router(training_router, prefix="/api/v1", tags=["Step 8(just for training puprose):Training"])
+    model_evaluation_router, prefix="/api/v1")
+

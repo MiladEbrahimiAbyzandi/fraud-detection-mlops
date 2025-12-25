@@ -46,9 +46,28 @@ router = APIRouter()
 #         if not (v.is_file() and v.suffix.lower() == ".csv"):
 #             raise ValueError("The final transfomed CSV file for inference is not found")
 #         return str(v)
+STAGE3_INFERENCE_DESCRIPTION = """
+Stage 3 (Inference) — Apply Encoder/Scaler and Align Feature Columns
+
+Transforms inference data using preprocessing artifacts produced during training.
+This guarantees the model receives the same feature representation during inference as it saw during training.
+
+This step:
+- Drops unused/leakage columns (IDs, timestamps, address/card details, raw location fields, etc.)
+- Applies the saved OneHotEncoder to categorical columns
+- Applies the saved RobustScaler to numeric columns (after filling missing values)
+- Validates that required columns exist, raising clear errors if not
+- Selects and orders features using selected_columns so the output matches the trained model input
+
+Returns: a model-ready dataframe with the exact same feature columns used in training.
+"""
 
 
-@router.post("/transformation-stage3-inference")
+@router.post("/transformation-stage3-inference",
+             name="Step 7 - Third Stage of Data Transformation Based on Training Artifacts for Inference.",
+             tags=["Inference"],
+             description= STAGE3_INFERENCE_DESCRIPTION
+             )
 async def transformation_stage3_inference_endpoint():
     """
     Perform the third stage of data transformation on second stage transformed data for inference.

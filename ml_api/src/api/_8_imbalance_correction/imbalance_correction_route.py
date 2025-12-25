@@ -12,6 +12,17 @@ from src.api.router_constants import (
 )
 from src.db.db import Database
 
+IMBALANCE_DESCRIPTION = """
+Imbalance Correction (Training Only) — SMOTE
+
+Balances the training dataset using SMOTE (Synthetic Minority Over-sampling Technique).
+SMOTE generates synthetic fraud samples to reduce class imbalance and help the model learn fraud patterns.
+
+- Applied ONLY to training data (prevents data leakage)
+- sampling_strategy=1.0 creates a 1:1 class balance
+Returns: X_train_balanced, y_train_balanced
+"""
+
 router = APIRouter()
 
 # class ImbalanceCorrectionRequest(BaseModel):
@@ -37,7 +48,11 @@ router = APIRouter()
 #         return str(v)
 
 
-@router.post("/imbalance_correction")
+@router.post("/imbalance_correction",
+             name="Step 8 - Correct class imbalance in the training dataset using SMOTE.",
+    tags=["Training"],
+    description= IMBALANCE_DESCRIPTION
+             )
 async def correct_imbalance():
     """
     Endpoint to correct class imbalance in the training dataset using SMOTE.

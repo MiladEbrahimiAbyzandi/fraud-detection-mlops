@@ -36,8 +36,21 @@ router = APIRouter()
 #             raise ValueError("The file must be a CSV")
 #         return str(v)
 
+SPLITTER_DESCRIPTION = """
+Split Dataset (Train/Test)
 
-@router.post("/data-split")
+Splits the prepared dataset into training and test sets using `Is_Fraud` as the target label.
+The split is stratified to preserve the fraud/non-fraud class distribution in both subsets,
+which is critical for imbalanced fraud detection data.
+
+Outputs: X_train, X_test, y_train, y_test
+Parameters: test_size (default=0.2), random_state (default=42)
+"""
+
+@router.post("/data-split",
+             name="Step 3 - Split the first stage transformed data into training and testing sets.",
+    tags=["Training"],
+    description = SPLITTER_DESCRIPTION)
 async def data_split_endpoint(split_size: float = 0.2, random_state: int = 42):
     """
     Split the first stage transformed data into training and testing sets.

@@ -36,8 +36,22 @@ router = APIRouter()
 #             raise ValueError("The metrics file must be a JSON")
 #         return str(v)
 
+EVALUATION_DESCRIPTION = """
+Model Evaluation — Test Metrics Report
 
-@router.post("/evaluate")
+Evaluates a trained classifier on the test set and returns key classification metrics:
+- accuracy, precision, recall, f1_score
+- confusion_matrix as a JSON-serializable list: [[TN, FP], [FN, TP]]
+
+Inputs: trained model + X_test + y_test
+Output: JSON dictionary of metrics for reporting and comparison.
+"""
+
+@router.post("/evaluate",
+             name="Step 10 - Evaluate the trained model on the test dataset and save evaluation metrics.",
+    tags=["Training"],
+    description= EVALUATION_DESCRIPTION
+             )
 async def run_evaluation():
     """
     Endpoint to evaluate the trained model on the test dataset and save evaluation metrics."""
