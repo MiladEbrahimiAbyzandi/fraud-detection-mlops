@@ -39,14 +39,15 @@ router = APIRouter()
 #         return str(path)
 MERGE_CSV_DESCRIPTION_MARKDOWN = """
 ### Merge CSVs
-Step 1 - Load data and Merge three CSV files and return the counts of cards, users, transactions and save the merged csv file.
+Step 1 - Load data and Merge three CSV files and save the merged csv file to the database.
 """
 
 
 @router.post(
     "/merge-csv",
-    name="Step 1 - Load data and Merge three CSV files and return the counts of cards, users, transactions and save the merged csv file.",
+    name="Step 1 - Load data and Merge Cards, Users, and Transactions CSV files.",
     description=MERGE_CSV_DESCRIPTION_MARKDOWN,
+    tags=["Training", "Inference"]
 )
 async def merge_csv_endpoint():
     """

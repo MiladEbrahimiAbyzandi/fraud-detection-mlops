@@ -32,8 +32,28 @@ class ArtifactsResponse(BaseModel):
             raise ValueError("The output file must be a JSON which is not found")
         return str(v)
 
+METADATA_DESCRIPTION = """
+Metadata Extraction (Training Only)
 
-@router.post("/artifacts")
+Extracts reusable training metadata to be saved as an artifact and reused during inference
+(without recalculating on unseen data).
+
+This step:
+- Uses X_train + y_train (prevents data leakage)
+- Computes high-risk state and city lists from card-present (CP) transactions
+  based on fraud rates above the overall training fraud rate
+- Identifies high-risk MCC codes (fraud rate above overall baseline)
+- Identifies high-risk merchants (>= 20 transactions AND fraud_rate > 0.10)
+- Computes a 99th percentile threshold for amount_income_ratio = Amount / Yearly_Income_Person
+
+Returns a JSON dictionary:
+{high_risk_states, high_risk_cities, high_risk_mcc, high_risk_merchants, threshold}.
+"""
+
+@router.post("/artifacts",
+             name="Step 4 - Extract data artifacts for next transformation stages.",
+    tags=["Training"],
+    description= METADATA_DESCRIPTION )
 async def get_artifacts():
     """
     Extract data artifacts in order to apply to the next levels of data transformation on the X_train dataset.

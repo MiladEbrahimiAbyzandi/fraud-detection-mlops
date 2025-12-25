@@ -32,8 +32,27 @@ router = APIRouter()
 #     message: str
 #     inference_results_path: str = str(INFERENCE_RESULT)
 
+INFERENCE_DESCRIPTION = """
+Runs fraud detection inference on new data.
 
-@router.post("/inference")
+This endpoint:
+- Loads the trained model from MODEL_PATH
+- Fetches the Stage 3 transformed inference dataset from the database table
+  "transformed_inference_data_stage3"
+- Generates:
+  - predictions (0 = not fraud, 1 = fraud)
+  - predictions_proba (probability of fraud)
+- Saves the results to INFERENCE_RESULT as a JSON file
+- Returns the predictions and probabilities in the response
+"""
+
+
+
+@router.post("/inference",
+             name="Step 8 - Perform inference using the trained model on the transformed inference data.",
+    tags=["Inference"],
+    description= INFERENCE_DESCRIPTION
+             )
 async def run_inference():
     """
     Endpoint to perform inference using the trained model on the transformed inference data."""

@@ -47,8 +47,31 @@ router = APIRouter()
 #             raise ValueError("The file must be a CSV")
 #         return str(v)
 
+STAGE2_DESCRIPTION = """
+Stage 2 — Metadata-Based Risk Features
 
-@router.post("/transformation-stage2")
+Adds second-stage features using a saved metadata artifact (generated from training data).
+This ensures consistent feature engineering for both training and inference without recalculating
+high-risk lists on unseen data.
+
+This step:
+- Uses metadata: high_risk_states, high_risk_cities, high_risk_mcc, high_risk_merchants, and a threshold
+- Creates risk flags:
+  - high_risk_state, high_risk_cities, high_risk_MCC, high_risk_merchant
+  - high_risk_transactions (amount_income_ratio > threshold)
+- Creates user behavior features:
+  - unique_mcc_count (unique MCCs per user)
+  - mcc_changed and rapid_mcc_changed (MCC switches within 1 hour)
+- Validates output rows using Stage2Features (Pydantic) for a standardized schema.
+
+Input: Stage 1 output + metadata artifact
+Output: Stage 2 standardized feature table
+"""
+
+@router.post("/transformation-stage2",
+             name="Step 5 - Second Stage of Data Transformation Based on extracted artifacts.",
+    tags=["Training", "Inference"],
+    description= STAGE2_DESCRIPTION )
 async def transformation_stage2_endpoint():
     """
     Perform the second stage of data transformation on split data.

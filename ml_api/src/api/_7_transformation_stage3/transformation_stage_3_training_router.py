@@ -15,6 +15,22 @@ from src.api.router_constants import (
     SELECTED_COLUMNS_PATH,
 )
 
+STAGE3_TRAINING_DESCRIPTION = """
+Stage 3 (Training) — Encode, Scale, and Select Features
+
+Prepares Stage 2 data for model training by converting it into a fully numeric, model-ready matrix.
+This step also produces preprocessing artifacts that must be reused during inference.
+
+This step:
+- Drops unused/leakage columns (IDs, raw timestamps, address/card details, raw location fields, etc.)
+- One-hot encodes categorical columns using OneHotEncoder(handle_unknown="ignore")
+- Scales numeric columns with RobustScaler (robust to outliers), filling missing values with training means
+- Removes near-constant features using VarianceThreshold(threshold=0.0001)
+- Aligns X_test columns to match X_train using the selected feature list
+
+Returns:
+X_train_transformed, X_test_transformed, encoder, scaler, selected_columns.
+"""
 
 router = APIRouter()
 
@@ -52,7 +68,11 @@ router = APIRouter()
 #     return str(v)
 
 
-@router.post("/transformation-stage3")
+@router.post("/transformation-stage3",
+             name="Step 6 - Third Stage of Data Transformation on Second Stage Transformed data for Training.",
+    tags=["Training"],
+    description= STAGE3_TRAINING_DESCRIPTION
+             )
 async def transformation_stage3_training_endpoint():
     """
     Perform the third stage of data transformation on second stage transformed data for training.

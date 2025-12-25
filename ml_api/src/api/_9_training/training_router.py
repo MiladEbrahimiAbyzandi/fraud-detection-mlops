@@ -10,6 +10,19 @@ from src.api.router_constants import X_TRAIN_BALANCED_PATH, Y_TRAIN_BALANCED_PAT
 from src.db.db import Database
 from typing import Literal
 
+TRAINING_DESCRIPTION = """
+Model Training — XGBoost or Random Forest
+
+Trains a fraud detection model using the prepared training data (X_train, y_train).
+Supported models:
+- 'xgboost' (XGBClassifier)
+- 'randomforest' (RandomForestClassifier)
+
+This step also cleans feature column names (removes special characters like [ ] < >)
+to ensure compatibility with model libraries (especially XGBoost).
+
+Returns: a fitted model object.
+"""
 router = APIRouter()
 
 # class TrainingRequest(BaseModel):
@@ -50,7 +63,12 @@ router = APIRouter()
 #         return str(v)
 
 
-@router.post("/train")
+@router.post("/train",
+             name="Step 9 - Train a machine learning model using the balanced training dataset.",
+    tags=["Training"],
+    description= TRAINING_DESCRIPTION
+             )
+
 async def run_training(model_name: Literal["xgboost", "randomforest"]):
     """
     Endpoint to train a machine learning model using the balanced training dataset."""

@@ -30,8 +30,27 @@ router = APIRouter()
 #             raise ValueError("The file must be a CSV")
 #         return str(v)
 
+STAGE1_DESCRIPTION = """
+Stage 1 — Core Feature Engineering & Schema Validation
 
-@router.post("/transformation-stage1")
+Transforms merged raw data into a model-ready dataset by:
+- Building a full transaction timestamp and extracting time features (hour, day of week)
+- Creating transaction channel feature (online=CNP vs in-person=CP)
+- Engineering demographic/retirement features (age groups, retirement proximity)
+- Creating income and ZIP comparison features (income tiers, mismatch indicators)
+- Creating debt/credit risk features (DTI, utilization bins, FICO tiers)
+- Adding synthetic fraud risk signals and ZIP mismatch checks
+- Computing months-to-expiry
+- Validating every row using the TransactionFeatures schema (Pydantic) for consistent output
+
+Returns the transformed dataset in a standardized schema for both training and inference.
+"""
+
+@router.post("/transformation-stage1",
+             name="Step 2 - First Stage of Data Transformation on Merged CSV files.",
+    tags=["Training", "Inference"],
+    description= STAGE1_DESCRIPTION
+             )
 async def transformation_stage1_endpoint():
     """
     Perform the first stage of data transformation on merged CSV files.
