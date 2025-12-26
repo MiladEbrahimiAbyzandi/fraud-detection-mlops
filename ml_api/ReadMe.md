@@ -1,9 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
-
 # Fraud Detection ML API (End-to-End Pipeline)
 
 A production-style **fraud detection** project that exposes the full ML
