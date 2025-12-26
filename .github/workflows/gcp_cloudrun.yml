@@ -13,6 +13,7 @@ env:
   GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
   REGION_NAME: us-central1
   GCP_SA_KEY_FILE_NAME: project_sa_key.json
+  ENV_FILE_GCP_SECRET_NAME: ${{ vars.ENV_FILE_GCP_SECRET_NAME }}
   IMAGE_TAG: ${{vars.REGION_NAME}}/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_PROJECT_ID }}/ml-api:${{ github.sha }}
   BUILD_VERSION: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
  
