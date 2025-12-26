@@ -2,7 +2,6 @@
 .ipynb_checkpoints/
 .DS_Store
 .env*
-.venv/
 .vscode/
 __pycache__/
 build/
@@ -17,4 +16,6 @@ raw_data
 app/__pycache__/
 app/inference/inference_data.csv
 fastapi_results
-.env.build
+cloudrun.env
+pull_request_template.md
+TODO.md
