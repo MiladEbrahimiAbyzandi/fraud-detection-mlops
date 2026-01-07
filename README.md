@@ -5,7 +5,7 @@ workflow through a **FastAPI** service: data ingestion → feature
 engineering (multi-stage) → training → evaluation → inference.
 
 > Live docs (Cloud Run):
-> [**https://ml-api-25274068551.us-central1.run.app/docs**](https://ml-api-25274068551.us-central1.run.app/docs){.uri}
+> [**https://ml-api-25274068551.us-central1.run.app/docs**](https://ml-api-25274068551.us-central1.run.app/docs)
 
 ------------------------------------------------------------------------
 
@@ -38,8 +38,6 @@ This API guides you through an end-to-end workflow:
 3.  Load the saved model and generate:
     -   `predictions` (0/1)
     -   `predictions_proba` (fraud probability)
-
-------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
 
@@ -364,4 +362,5 @@ Exploratory notebooks are under:
 ## Author
 
 **Milad Ebrahimi**
+
 
